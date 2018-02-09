@@ -1,0 +1,11 @@
+{
+  "name": "docker-wordpress-gulp",
+  "version": "0.0.1",
+  "description": "Docker image for Wordpress using Gulp and BrowserSync.",
+  "main": "index.php",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Suthan Bala",
+  "license": "ISC"
+}

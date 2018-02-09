@@ -1,17 +1,30 @@
 version: '3.1'
 services:
   wordpress:
-    image: wordpress
+    build: .
     restart: unless-stopped
-    volumes:
-      - ./themes/:/var/www/html/wp-content/themes
-      - ./plugins/:/var/www/html/wp-content/plugins
-    ports:
-      - 8080:80
+    links:
+      - mysql
     environment:
-      WORDPRESS_DB_PASSWORD: example
+      - SITE_URL=tamilforce.com
+      - WORDPRESS_DB_HOST=mysql
+      - WORDPRESS_DB_USER=root
+      - WORDPRESS_DB_PASSWORD=example
+      - WORDPRESS_DB_NAME=wordpress
+    volumes:
+      - ./src/themes/:/var/www/html/wp-content/themes
+      - ./src/plugins/:/var/www/html/wp-content/plugins
+      - "node-modules:/var/node_modules"
+    ports:
+      - 80:80
+      - 3000:3000
+      - 3001:3001
+    command: /bin/bash -c "cd /var/www/html/ && apache2-foreground && gulp"
   mysql:
     image: mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      - MYSQL_ROOT_PASSWORD=example
+      - MYSQL_DATABASE=wordpress
+volumes:
+  node-modules:
