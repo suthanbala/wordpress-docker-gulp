@@ -7,7 +7,7 @@ services:
     links:
       - mysql
     env_file:
-      - .env
+      - app.env
     volumes:
       - ./src/themes/:/var/www/html/wp-content/themes
       - ./src/plugins/:/var/www/html/wp-content/plugins
@@ -22,6 +22,6 @@ services:
     image: mysql
     restart: unless-stopped
     env_file:
-      - .env
+      - app.env
 volumes:
   node-modules:
