@@ -19,7 +19,7 @@ services:
       - 80:80
       - 3000:3000
       - 3001:3001
-    command: /bin/bash -c "cd /var/www/html/ && apache2-foreground && gulp"
+    command: /bin/bash -c "apache2-foreground & gulp"
   mysql:
     image: mysql
     restart: unless-stopped

@@ -1,0 +1,1 @@
+{"version":3,"sources":["suthan/js/src/main.js"],"names":["test","name","s"],"mappings":"AAAA,SAAAA,OAEA,OACAC,KAAA,UAIA,IAAAC,EAAA","file":"main.js","sourcesContent":["function test(){\n  var s;\n  return {\n    'name': 'suthan'\n  };\n}\n\nvar s= \"suthan\";\n"]}
