@@ -1,16 +1,13 @@
 version: '3.1'
 services:
   wordpress:
+    container_name: 'wp'
     build: .
     restart: unless-stopped
     links:
       - mysql
-    environment:
-      - SITE_URL=tamilforce.com
-      - WORDPRESS_DB_HOST=mysql
-      - WORDPRESS_DB_USER=root
-      - WORDPRESS_DB_PASSWORD=example
-      - WORDPRESS_DB_NAME=wordpress
+    env_file:
+      - .env
     volumes:
       - ./src/themes/:/var/www/html/wp-content/themes
       - ./src/plugins/:/var/www/html/wp-content/plugins
@@ -21,10 +18,10 @@ services:
       - 3001:3001
     command: /bin/bash -c "apache2-foreground & gulp"
   mysql:
+    container_name: "wp-db"
     image: mysql
     restart: unless-stopped
-    environment:
-      - MYSQL_ROOT_PASSWORD=example
-      - MYSQL_DATABASE=wordpress
+    env_file:
+      - .env
 volumes:
   node-modules:

@@ -1,68 +1,91 @@
+
 ![Docker](./readme-assets/docker-logo.png)
 ![WordPress](./readme-assets/wp-logo.png)
 ![Gulp and SASS](./readme-assets/gulp-sass-logo.png)
 
 # WordPress Docker Gulp
-> If you are one of those people who has to configure Gulp to compile SASS assets, concat and minify JS files, and Hot Reload for every single one of your WordPress projects, then this project is for you. On this project, we've utilized Docker to setup a container with latest version of WordPress and setup Gulp. All you need to do is, run `docker-compose up wordpress` on your terminal and it will fire up the docker running Apache webserver to serve the WordPress and BrowserSync to hot reloadm. It will fire up
+> If you are one of those people who has to configure Gulp to compile SASS assets, concat and minify JS files, and Hot Reload for every single one of your WordPress projects, then this project is for you. On this project, we've utilized Docker to setup a container with latest version of WordPress and setup Gulp. All you need to do is, run `docker-compose up wordpress` on your terminal and it will fire up the docker running Apache webserver to serve the WordPress and BrowserSync to hot reload. You can then access your site at the domain you've set in the `.env` file, e.g. yourdomain.com (this would be a normal WordPress site without the hot reloading enabled), you can access the hot reloading enabled version of the site at http://yourdomain.com/:3000.
 
-This docker image can be used for WordPress site development. When you build the container on your machine, we will download the latest Wordpress and put it into the web root folder (`/var/www/html` in our case)
+## Features
+- Just worry about the things you are actually modifying for development (`themes` and `plugins` folders from `wp-content`)
+- Less configuration
+- You can benefit from what [BrowserSync](https://www.browsersync.io/) has to offer:
+  - Hot reloading
+  - Mobile Debugging
+  - Your scroll, click, refresh and form actions are mirrored between browsers while you test.
+  - ..these are just a few to list, visit [BrowserSync](https://www.browsersync.io/) for more details
 
 ## Installing / Getting started
 
-You may start by cloning the directory to your machine
+You may start by cloning the directory to your machine. Naming the project as the domain name is a good practice.
 
 ```shell
-docker-compose build wordpress
+git clone https://github.com/suthanbala/wordpress-docker-gulp.git dev.yourdomain.com
 ```
 
-Here you should say what actually happens when you execute the code above.
+You should now have the following structure:
+
+```
+dev.yourdomain.com
+│   readme-assets
+└───src
+│   └───themes
+│   └───plugins
+│   .env
+│   docker-compose.yml
+│   docker-entrypoint.sh
+│   Dockerfile
+│   gulpfile.js
+│   package.json
+│   README.md
+```
+
+The only location you will need to work are inside the **src** directory
 
 ## Developing
 
 ### Built With
-List main libraries, frameworks used including versions (React, Angular etc...)
+- [Docker](https://www.docker.com/)
+- [WordPress](https://wordpress.org/)
+- [BrowserSync](http://browsersync.io)
+- [NodeJS](https://nodejs.org/)
 
 ### Prerequisites
-What is needed to set up the dev environment. For instance, global dependencies or any other tools. include download links.
+You must have [Docker](https://www.docker.com/) installed on your machine. Everything outlined in this project gets run within the Docker container. Docker will download them and install them into the container during the build process.
 
 
 ### Setting up Dev
 
-Here's a brief intro about what a developer must do in order to start developing
-the project further:
+You may want to add a `host` entry to your machine, possibly with a prefix to avoid any conflicts may arise when going production. Run `sudo nano /etc/hosts`  in your terminal if you're on Unix/MacOS, or, open NotePad as administrator, then open `C:\Windows\System32\drivers\etc\hosts` if you're on Windows. Then  append the following line `127.0.0.1	dev.yourdomain.com` to the hosts file.
 
 ```shell
-git clone https://github.com/your/your-project.git
-cd your-project/
-packagemanager install
+git clone https://github.com/suthanbala/wordpress-docker-gulp.git dev.yourdomain.com
 ```
-
-And state what happens step-by-step. If there is any virtual environment, local server or database feeder needed, explain here.
-
-### Building
-
-If your project needs some additional steps for the developer to build the
-project after some code changes, state them here. for example:
-
-```shell
-./configure
-make
-make install
+Go into the directory and update the `SITE_URL`  in your `.env` file to the domain you're working on. Once that's done, in your terminal, run the following to build the container:
 ```
+docker-compose build
+```
+Now that you have the toolkit ready, you need a skeleton theme to start . I normally start off here, [Underscores](http://underscores.me/), it comes pre-packaged with a lot of WordPress recommended presets, and all necessary templates, HTML5 markup, and even SASS. I recommend you go to [Underscores](http://underscores.me/), expand that advanced options, set the namespaces and most importantly check that `sassify` option. Download the theme, and extract it into the `src/themes/` directory.
 
-Here again you should state what actually happens when the code above gets
-executed.
+Currently two directories are mounted into the projects:
+`src/themes/*` --> `wp-content/themes/`
+`src/plugins/*` --> `wp-content/plugins/`
+
+#### Working with SASS
+The project is set to watch for any changes made to any sass files located in the directory **src/themes/yourtheme/sass/** (if you are using Underscores generated theme, then all the SASS files are already in here), and re-compile the **style.scss** and output them into **src/themes/yourtheme/style.css**.
+
+If you have multiple scss files, be sure to import them into the style.scss using `@import`.
+
+#### Working with JS
+Create a new folder called **src** folder in your **src/themes/yourtheme/js/**. Place all your JavaScript files in that folder (**src/themes/yourtheme/js/src/**).
+
+The project is set to watch for any changes made in the **src/themes/yourtheme/js/src** folder and create a combined and minified  **src/themes/yourtheme/js/main.js**.
 
 ### Deploying / Publishing
-give instructions on how to build and release a new version
-In case there's some step you have to take that publishes this project to a
-server, this is the right time to state it.
 
-```shell
-packagemanager deploy your-project -s server.com -u username -p password
-```
+While developing a WordPress theme, you are only making changes to either theme and plugins folder. Essentially, when you go live, you need to install WordPress, then copy the theme and the plugins from the src directory into the wp-content folder on the server.
 
-And again you'd need to tell what the previous code actually does.
+During this early phase in the tool, we do not have a sufficient way to do a database/assets export yet. They are coming soon though.
 
 ## Versioning
 
@@ -71,32 +94,4 @@ We can maybe use [SemVer](http://semver.org/) for versioning. For the versions a
 
 ## Configuration
 
-Here you should write what are all of the configurations a user can enter when
-using the project.
-
-## Tests
-
-Describe and show how to run the tests with code examples.
-Explain what these tests test and why.
-
-```shell
-Give an example
-```
-
-## Style guide
-
-Explain your code style and show how to check it.
-
-## Api Reference
-
-If the api is external, link to api documentation. If not describe your api including authentication methods as well as explaining all the endpoints with their required parameters.
-
-
-## Database
-
-Explaining what database (and version) has been used. Provide download links.
-Documents your database design and schemas, relations etc... 
-
-## Licensing
-
-State what the license is and how to find the text version of the license.
+`SITE_URL` in the .env file reflects the domain that you're working on. Make sure you add that domain to your host file.
