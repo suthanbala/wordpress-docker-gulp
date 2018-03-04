@@ -11,6 +11,7 @@ services:
     volumes:
       - ./src/themes/:/var/www/html/wp-content/themes
       - ./src/plugins/:/var/www/html/wp-content/plugins
+      - ./build:/build
       - "node-modules:/var/node_modules"
     ports:
       - 80:80
@@ -21,6 +22,8 @@ services:
     container_name: "wp-db"
     image: mysql
     restart: unless-stopped
+    volumes:
+       - ./build/sql:/build/sql
     env_file:
       - app.env
   phpmyadmin:

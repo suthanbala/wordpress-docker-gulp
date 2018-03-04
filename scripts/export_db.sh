@@ -1,0 +1,1 @@
+docker exec wp-db bash -c 'mysqldump -u$WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD $WORDPRESS_DB_NAME > /build/sql/db.sql; exit'

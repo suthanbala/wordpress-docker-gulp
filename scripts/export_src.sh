@@ -1,0 +1,1 @@
+docker exec wp bash -c 'rsync -av --exclude='node_modules' --exclude='gulpfile.js' --exclude='package.json' /var/www/html/ /build/html;  exit'
