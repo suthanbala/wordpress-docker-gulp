@@ -23,5 +23,12 @@ services:
     restart: unless-stopped
     env_file:
       - app.env
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+    - mysql:db
+    restart: always
+    ports:
+     - 8080:80
 volumes:
   node-modules:
