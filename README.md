@@ -103,3 +103,8 @@ During this early phase in the tool, we do not have a sufficient way to do a dat
 ## Versioning
 
 We can maybe use [SemVer](http://semver.org/) for versioning. For the versions available, see the [link to tags on this repository](/tags).
+
+## Build
+- To fully export the project, run the `export_all.sh` bash script located in the `scripts` folder. This will export all the source code and the SQL file into the `build` directory.
+- If you just need the database, you can run the `/scripts/export_db.sh` Bash script. This will create a `db.sql` in the `build/sql` directory.
+- If you just need the source files to be exported, you can run the `/scripts/export_src.sh` Bash script. This will copy all the source code including the themes, and plugins with the proper WordPress structure in to `build/html` directory.

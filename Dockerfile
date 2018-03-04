@@ -8,6 +8,9 @@ RUN apt-get update && apt-get install -y libpng12-dev libjpeg-dev && rm -rf /var
 	&& docker-php-ext-install gd
 RUN docker-php-ext-install mysqli
 
+# Installing rsync for copying files
+RUN apt-get update && apt-get install -y rsync
+
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 RUN curl -o wordpress.tar.gz -SL https://wordpress.org/latest.tar.gz \
 	&& tar -xzf wordpress.tar.gz --strip-components=1 -C /var/www/html/ \
