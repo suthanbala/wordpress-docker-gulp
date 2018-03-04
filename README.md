@@ -9,6 +9,7 @@
 ## Features
 - Just worry about the things you are actually modifying for development (`themes` and `plugins` folders from `wp-content`)
 - Less configuration
+- Comes with the PHPMyAdmin built-in, so you can manage the database
 - You can benefit from what [BrowserSync](https://www.browsersync.io/) has to offer:
   - Hot reloading
   - Mobile Debugging
@@ -41,6 +42,15 @@ dev.yourdomain.com
 ```
 
 The only location you will need to work are inside the **src** directory
+
+## Configuration
+
+`SITE_URL` in the .env file reflects the domain that you'll be working on. Make sure you add that domain to your host file.
+
+Default Database configuration:
+
+- Username: `root`
+- Password: `example`
 
 ## Developing
 
@@ -81,6 +91,9 @@ Create a new folder called **src** folder in your **src/themes/yourtheme/js/**. 
 
 The project is set to watch for any changes made in the **src/themes/yourtheme/js/src** folder and create a combined and minified  **src/themes/yourtheme/js/main.js**.
 
+#### Managing Database
+The project comes with the PHPMyAdmin configured to manage the site admin. You can access the PHPMyAdmin at [localhost:8080](http://localhost:8080).
+
 ### Deploying / Publishing
 
 While developing a WordPress theme, you are only making changes to either theme and plugins folder. Essentially, when you go live, you need to install WordPress, then copy the theme and the plugins from the src directory into the wp-content folder on the server.
@@ -90,8 +103,3 @@ During this early phase in the tool, we do not have a sufficient way to do a dat
 ## Versioning
 
 We can maybe use [SemVer](http://semver.org/) for versioning. For the versions available, see the [link to tags on this repository](/tags).
-
-
-## Configuration
-
-`SITE_URL` in the .env file reflects the domain that you're working on. Make sure you add that domain to your host file.
