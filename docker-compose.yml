@@ -6,8 +6,6 @@ services:
     restart: unless-stopped
     links:
       - mysql
-    env_file:
-      - app.env
     volumes:
       - ./src/themes/:/var/www/html/wp-content/themes
       - ./src/plugins/:/var/www/html/wp-content/plugins
@@ -17,6 +15,11 @@ services:
       - 80:80
       - 3000:3000
       - 3001:3001
+    environment:
+      - WORDPRESS_DB_HOST=mysql
+      - WORDPRESS_DB_USER=${DB_USER}
+      - WORDPRESS_DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
     command: /bin/bash -c "apache2-foreground & gulp"
   mysql:
     container_name: "wp-db"
@@ -25,7 +28,7 @@ services:
     volumes:
        - ./build/sql:/build/sql
     env_file:
-      - app.env
+      - .env
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     links:
@@ -33,5 +36,9 @@ services:
     restart: always
     ports:
      - 8080:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_USER=${DB_USER}
+      - PMA_PASSWORD=${MYSQL_ROOT_PASSWORD}
 volumes:
   node-modules:
