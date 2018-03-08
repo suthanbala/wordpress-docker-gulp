@@ -18,7 +18,7 @@
 
 ## Installing / Getting started
 
-You may start by cloning the directory to your machine. Naming the project as the domain name is a good practice.
+You may start by cloning the directory to your machine. Naming the project as the domain name is a good practice. If you are working on an existing site, then copy the themes in to `src/themes/`, plugins into `src/plugins/` and the uploads into `src/uploads`. Also, if you have the Database SQL file, then place it inside the `src/initial-db` directory.
 
 ```shell
 git clone https://github.com/suthanbala/wordpress-docker-gulp.git dev.yourdomain.com
@@ -102,7 +102,7 @@ During this early phase in the tool, we do not have a sufficient way to do a dat
 
 ## Versioning
 
-We can maybe use [SemVer](http://semver.org/) for versioning. For the versions available, see the [link to tags on this repository](/tags).
+We are using [SemVer](http://semver.org/) for versioning.
 
 ## Build
 - To fully export the project, run the `export_all.sh` bash script located in the `scripts` folder. This will export all the source code and the SQL file into the `build` directory.
