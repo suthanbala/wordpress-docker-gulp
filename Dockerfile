@@ -25,15 +25,14 @@ WORKDIR /var/www/html
 
 # Installing Gulp, BrowserSync and other Necessary packages
 COPY package.json /var/www/html/package.json
-RUN npm install -g browser-sync gulp --save-dev
-RUN npm install gulp-sass gulp-concat gulp-rename gulp-uglify gulp-sourcemaps --save-dev
-
-# Links the global packages
-RUN npm link gulp
-RUN npm link browser-sync
+RUN npm install
 
 COPY docker-entrypoint.sh /entrypoint.sh
 COPY gulpfile.js /var/www/html/gulpfile.js
+
+RUN npm install -g gulp@next browser-sync
+RUN npm link gulp
+RUN npm link browser-sync
 
 # grr, ENTRYPOINT resets CMD now
 ENTRYPOINT ["/entrypoint.sh"]
