@@ -36,6 +36,7 @@ COPY docker-entrypoint.sh /entrypoint.sh
 COPY gulpfile.js /var/www/html/gulpfile.js
 
 # grr, ENTRYPOINT resets CMD now
+RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
 # CMD ["apache2-foreground && gulp"]
