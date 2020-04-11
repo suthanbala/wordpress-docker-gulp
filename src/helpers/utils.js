@@ -1,3 +1,4 @@
+const path = require('path');
 
 /**
  * Given the filename, we prepare the fullpath
@@ -14,8 +15,18 @@ function concatFileName(file) {
  * @param {string} levels How many levels to go up
  * @param {string} append The folder to append, once the `src` and the `folderName` removed
  */
-function removeThemePathFromFilePath(file) {
-  return file;
+function removeThemePathFromFilePath(file, levels = "../../", append = "") {
+  const result = JSON.parse(JSON.stringify(file));
+  result.dirname = path.relative(
+    path.resolve(),
+    path.resolve(result.dirname, levels, append)
+  );
+
+  // console.log("\n\n", concatFileName(file), concatFileName(result));
+  return result;
 }
 
-
+module.exports = {
+    concatFileName,
+    removeThemePathFromFilePath
+}

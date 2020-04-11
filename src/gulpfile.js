@@ -1,4 +1,4 @@
-const { src, dest, parallel } = require("gulp");
+const { src, dest, parallel, series, watch } = require("gulp");
 const sass = require("gulp-sass");
 const browserSync = require("browser-sync");
 const path = require("path");
@@ -7,64 +7,117 @@ const uglify = require("gulp-uglify");
 const concat = require("gulp-concat");
 const sourcemaps = require("gulp-sourcemaps");
 
-function concatFileName(file) {
-  return file.dirname + "/" + file.basename + file.extname;
+const { removeThemePathFromFilePath } = require("./helpers/utils");
+
+const server = browserSync.create();
+
+const siteUrl = process.env.SITE_URL;
+
+const appPaths = {
+  sass: "themes/*/src/sass/*.scss",
+  jsPath: "themes/*/src/js/*.js",
+  jsPluginsPath: "themes/*/src/js/plugins/*.js",
+};
+
+function reload(done) {
+  server.reload();
+  done();
 }
 
-/**
- * Given the file object, we'll remove the src and the js/sass path removed. Then append the
- * `append` dirname to the path.
- * @param {object} file The file object with `dirname`, `basename` and `extension` properties
- * @param {string} levels How many levels to go up
- * @param {string} append The folder to append, once the `src` and the `folderName` removed
- */
-function removeThemePathFromFilePath(file, levels = "../../", append = "") {
-  const result = JSON.parse(JSON.stringify(file));
-  result.dirname = path.relative(path.resolve(), path.resolve(result.dirname, levels, append));
-
-  console.log("\n\n", concatFileName(file), concatFileName(result));
-  return result;
-}
-
-/**
- * The command to serve the page
- */
-function html() {
-  return src("client/templates/*.pug").pipe(pug()).pipe(dest("build/html"));
+function serve(done) {
+  server.init({
+    proxy: "wordpress",
+    open: false,
+    port: 3000
+  });
+  done();
 }
 
 /**
  * The task to convert the SASS file into css
  */
 function css() {
-  return src("themes/*/src/sass/*.scss")
+  let relativePath;
+  return src(appPaths.sass, { sourcemaps: true })
     .pipe(sass())
-    .pipe(rename((file) => removeThemePathFromFilePath(file, "../../", "css")))
-    .pipe(dest('./css'));
+    .pipe(
+      rename((file) => {
+        const result = removeThemePathFromFilePath(file, "../../../");
+        relativePath = file.dirname;
+        return result;
+      })
+    )
+    .pipe(
+      dest(
+        (file) => {
+          // We go two levels up (`src/sass`), to the root folder
+          finalPath = path.resolve(file.base, relativePath, "../../");
+          return finalPath;
+        },
+        { sourcemaps: true }
+      )
+    );
 }
 
 /**
  * The task to convert the app js into minified and concat them together.
  */
 function js() {
-  return src("themes/*/src/js/*.js", { sourcemaps: true })
-    .pipe(rename((file) => removeThemePathFromFilePath(file, "../../", "js")))
+  let relativePath;
+  return src(appPaths.jsPath, { sourcemaps: true })
+    .pipe(
+      rename((file) => {
+        const result = removeThemePathFromFilePath(file, "../../");
+        relativePath = file.dirname;
+        return result;
+      })
+    )
     .pipe(concat("main.min.js"))
-    .pipe(dest("js", { sourcemaps: true }));
+    .pipe(uglify())
+    .pipe(
+      dest(
+        (file) => {
+          // We go two levels up (`src/js`), then into `js/`
+          finalPath = path.resolve(file.base, relativePath, "../../", "js");
+          return finalPath;
+        },
+        { sourcemaps: true }
+      )
+    );
 }
 
 /**
  * The task to minify and concatenate the plugins
  */
 function jsPlugins() {
-  return src("themes/*/src/js/plugins/*.js", { sourcemaps: true })
-    .pipe(rename((file) => removeThemePathFromFilePath(file, "../../../", "js")))
+  let relativePath;
+  return src(appPaths.jsPluginsPath, { sourcemaps: true })
+    .pipe(
+      rename((file) => {
+        const result = removeThemePathFromFilePath(file, "../../");
+        relativePath = file.dirname;
+        return result;
+      })
+    )
     .pipe(concat("plugins.min.js"))
-    .pipe(dest("js", { sourcemaps: true }));
+    .pipe(
+      dest(
+        (file) => {
+          // We go three levels up (`src/js/plugins`), then into `js/`
+          finalPath = path.resolve(file.base, relativePath, "../../../", "js");
+          return finalPath;
+        },
+        { sourcemaps: true }
+      )
+    );
 }
+
+const watchTask = () => watch(appPaths.jsPath, series(js, reload));
+
+const dev = series(jsPlugins, js, serve);
 
 exports.js = js;
 exports.jsPlugins = jsPlugins;
 exports.css = css;
-exports.html = html;
-exports.default = parallel(css, js, jsPlugins);
+exports.dev = dev;
+exports.default = parallel(css, js, jsPlugins, dev);

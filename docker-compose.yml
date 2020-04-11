@@ -4,18 +4,21 @@ services:
     container_name: "wp"
     build: .
     restart: unless-stopped
+    depends_on:
+      - mysql-wp
     volumes:
       - ./src/themes/:/var/www/html/wp-content/themes
       - ./src/plugins/:/var/www/html/wp-content/plugins
       - ./src/uploads/:/var/www/html/wp-content/uploads
     ports:
       - 80:80
+    env_file:
+      - ./.env
     environment:
-      - WORDPRESS_DB_HOST=mysql
+      - WORDPRESS_DB_HOST=mysql-wp
       - WORDPRESS_DB_USER=${DB_USER}
       - WORDPRESS_DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
-      - SITE_URL=${SITE_URL}
   browsersync:
     container_name: 'browsersync'
     depends_on: 
@@ -24,23 +27,28 @@ services:
       context: ./src
       dockerfile: ../browsersync/Dockerfile
     restart: unless-stopped
+    ports:
+      - 3000:3000
+      - 3001:3001
     volumes:
       - ./src/themes/:/var/www/html/themes
       - ./src/plugins/:/var/www/html/plugins
       - './src/gulpfile.js:/var/www/html/gulpfile.js'
-  mysql:
-    container_name: "mysql"
+      - './src/helpers:/var/www/html/helpers'
+    command: "npm run watch"
+  mysql-wp:
+    container_name: "mysql-wp"
     image: mysql
     restart: unless-stopped
     volumes:
       - ./apache2.conf:/etc/apache2/apache2.conf
     env_file:
-      - .env
+      - ./.env
     command: "--default-authentication-plugin=mysql_native_password"
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     links:
-      - mysql:db
+      - mysql-wp:db
     restart: always
     ports:
       - 8080:80
@@ -48,6 +56,3 @@ services:
       - PMA_ARBITRARY=1
       - PMA_USER=${DB_USER}
       - PMA_PASSWORD=${MYSQL_ROOT_PASSWORD}
-
-volumes:
-  node-modules:
