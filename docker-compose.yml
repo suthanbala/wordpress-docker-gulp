@@ -2,7 +2,7 @@ version: "3.1"
 services:
   wordpress:
     container_name: "wp"
-    build: .
+    image: wordpress:${WP_VERSION}
     restart: unless-stopped
     depends_on:
       - mysql-wp
@@ -25,23 +25,21 @@ services:
       - wordpress
     build:
       context: ./src
-      dockerfile: ../browsersync/Dockerfile
+      dockerfile: ../Dockerfile
     restart: unless-stopped
+    links:
+      - wordpress:${SITE_URL}
     ports:
       - 3000:3000
       - 3001:3001
     volumes:
       - ./src/themes/:/var/www/html/themes
       - ./src/plugins/:/var/www/html/plugins
-      - './src/gulpfile.js:/var/www/html/gulpfile.js'
-      - './src/helpers:/var/www/html/helpers'
     command: "npm run watch"
   mysql-wp:
     container_name: "mysql-wp"
     image: mysql
     restart: unless-stopped
-    volumes:
-      - ./apache2.conf:/etc/apache2/apache2.conf
     env_file:
       - ./.env
     command: "--default-authentication-plugin=mysql_native_password"

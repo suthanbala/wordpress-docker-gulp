@@ -1,1 +1,0 @@
-alert('You are in the script.js');

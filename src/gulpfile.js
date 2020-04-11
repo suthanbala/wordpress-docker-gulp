@@ -3,32 +3,33 @@ const sass = require("gulp-sass");
 const browserSync = require("browser-sync");
 const path = require("path");
 const rename = require("gulp-rename");
-const uglify = require("gulp-uglify");
-const concat = require("gulp-concat");
-const sourcemaps = require("gulp-sourcemaps");
+const appPaths = require("./gulp/paths");
 
-const { removeThemePathFromFilePath } = require("./helpers/utils");
+
+const { removeThemePathFromFilePath } = require("./gulp/gulp-tasks/utils");
+
+// Load the tasks
+const js = require("./gulp/gulp-tasks/JsTask");
+const jsPlugins = require("./gulp/gulp-tasks/JsPlugins");
 
 const server = browserSync.create();
 
 const siteUrl = process.env.SITE_URL;
-
-const appPaths = {
-  sass: "themes/*/src/sass/*.scss",
-  jsPath: "themes/*/src/js/*.js",
-  jsPluginsPath: "themes/*/src/js/plugins/*.js",
-};
 
 function reload(done) {
   server.reload();
   done();
 }
 
+function stream(done) {
+  console.log('Trying to stream the css');
+  server.stream();
+  done();
+}
+
 function serve(done) {
   server.init({
-    proxy: "wordpress",
-    open: false,
-    port: 3000
+    proxy: "http://test.suthanbala.com"
   });
   done();
 }
@@ -47,6 +48,7 @@ function css() {
         return result;
       })
     )
+    .pipe(server.stream())
     .pipe(
       dest(
         (file) => {
@@ -59,62 +61,14 @@ function css() {
     );
 }
 
-/**
- * The task to convert the app js into minified and concat them together.
- */
-function js() {
-  let relativePath;
-  return src(appPaths.jsPath, { sourcemaps: true })
-    .pipe(
-      rename((file) => {
-        const result = removeThemePathFromFilePath(file, "../../");
-        relativePath = file.dirname;
-        return result;
-      })
-    )
-    .pipe(concat("main.min.js"))
-    .pipe(uglify())
-    .pipe(
-      dest(
-        (file) => {
-          // We go two levels up (`src/js`), then into `js/`
-          finalPath = path.resolve(file.base, relativePath, "../../", "js");
-          return finalPath;
-        },
-        { sourcemaps: true }
-      )
-    );
+
+function watchTask() {
+  watch(appPaths.jsPath, series(js, reload));
+  watch(appPaths.jsPluginsPath, series(jsPlugins, reload));
+  watch(appPaths.sass, css);
 }
 
-/**
- * The task to minify and concatenate the plugins
- */
-function jsPlugins() {
-  let relativePath;
-  return src(appPaths.jsPluginsPath, { sourcemaps: true })
-    .pipe(
-      rename((file) => {
-        const result = removeThemePathFromFilePath(file, "../../");
-        relativePath = file.dirname;
-        return result;
-      })
-    )
-    .pipe(concat("plugins.min.js"))
-    .pipe(
-      dest(
-        (file) => {
-          // We go three levels up (`src/js/plugins`), then into `js/`
-          finalPath = path.resolve(file.base, relativePath, "../../../", "js");
-          return finalPath;
-        },
-        { sourcemaps: true }
-      )
-    );
-}
-
-const watchTask = () => watch(appPaths.jsPath, series(js, reload));
-
-const dev = series(jsPlugins, js, serve);
+const dev = series(jsPlugins, js, serve, watchTask);
 
 exports.js = js;
 exports.jsPlugins = jsPlugins;
