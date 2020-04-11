@@ -8,27 +8,35 @@ services:
       - ./src/themes/:/var/www/html/wp-content/themes
       - ./src/plugins/:/var/www/html/wp-content/plugins
       - ./src/uploads/:/var/www/html/wp-content/uploads
-      - ./build:/build
-      - "node-modules:/var/node_modules"
     ports:
       - 80:80
-      - 3000:3000
-      - 3001:3001
     environment:
       - WORDPRESS_DB_HOST=mysql
       - WORDPRESS_DB_USER=${DB_USER}
       - WORDPRESS_DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
       - SITE_URL=${SITE_URL}
+  browsersync:
+    container_name: 'browsersync'
+    depends_on: 
+      - wordpress
+    build:
+      context: ./src
+      dockerfile: ../browsersync/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./src/themes/:/var/www/html/themes
+      - ./src/plugins/:/var/www/html/plugins
+      - './src/gulpfile.js:/var/www/html/gulpfile.js'
   mysql:
     container_name: "mysql"
     image: mysql
     restart: unless-stopped
     volumes:
-        - ./apache2.conf:/etc/apache2/apache2.conf
+      - ./apache2.conf:/etc/apache2/apache2.conf
     env_file:
       - .env
-    command: '--default-authentication-plugin=mysql_native_password'
+    command: "--default-authentication-plugin=mysql_native_password"
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     links:
