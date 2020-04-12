@@ -8,9 +8,10 @@ COPY package.json /var/www/html/package.json
 RUN npm i
 
 # Copy all the Gulp related files
-COPY gulp ./
+COPY gulp ./gulp
+COPY ./gulpfile.js ./gulpfile.js
 
 EXPOSE 3000
 EXPOSE 3001
 
-CMD ["npm watch"]
+CMD ["npm run watch"]

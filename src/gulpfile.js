@@ -14,22 +14,24 @@ const jsPlugins = require("./gulp/gulp-tasks/JsPlugins");
 
 const server = browserSync.create();
 
-const siteUrl = process.env.SITE_URL;
+const siteUrl = process.env.SITE_URL || 'http://localhost';
 
+/**
+ * BrowserSync's reload method
+ * @param {function} done callback method
+ */
 function reload(done) {
   server.reload();
   done();
 }
 
-function stream(done) {
-  console.log('Trying to stream the css');
-  server.stream();
-  done();
-}
-
+/**
+ * BrowserSync's server initialization
+ * @param {function} done callback method
+ */
 function serve(done) {
   server.init({
-    proxy: "http://test.suthanbala.com"
+    proxy: siteUrl
   });
   done();
 }
@@ -58,17 +60,23 @@ function css() {
         },
         { sourcemaps: true }
       )
-    );
+    )
 }
 
-
+/**
+ * The Watch task, that'll watch the JS and SASS files and trigger a reload / style injection
+ */
 function watchTask() {
   watch(appPaths.jsPath, series(js, reload));
   watch(appPaths.jsPluginsPath, series(jsPlugins, reload));
   watch(appPaths.sass, css);
 }
 
-const dev = series(jsPlugins, js, serve, watchTask);
+/**
+ * The dev entry point, it will run the jsPlugins, JS, CSS then start the BrowserSync.
+ * Then it will watch the files for any changes and run the required tasks.
+ */
+const dev = series(jsPlugins, js, css, serve, watchTask);
 
 exports.js = js;
 exports.jsPlugins = jsPlugins;

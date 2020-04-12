@@ -29,12 +29,16 @@ services:
     restart: unless-stopped
     links:
       - wordpress:${SITE_URL}
+    env_file:
+      - ./.env
     ports:
       - 3000:3000
       - 3001:3001
     volumes:
       - ./src/themes/:/var/www/html/themes
       - ./src/plugins/:/var/www/html/plugins
+      - ./src/gulp/gulp-tasks:/var/www/html/gulp/gulp-tasks
+      - ./src/gulpfile.js:/var/www/html/gulpfile.js
     command: "npm run watch"
   mysql-wp:
     container_name: "mysql-wp"
