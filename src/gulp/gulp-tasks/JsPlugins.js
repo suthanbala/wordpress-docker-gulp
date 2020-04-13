@@ -3,8 +3,9 @@ const path = require("path");
 const rename = require("gulp-rename");
 const uglify = require("gulp-uglify");
 const concat = require("gulp-concat");
+const babel = require("gulp-babel");
 
-const appPaths = require('../paths');
+const appPaths = require("../paths");
 const { removeThemePathFromFilePath } = require("./utils");
 
 /**
@@ -18,6 +19,11 @@ function jsPlugins() {
         const result = removeThemePathFromFilePath(file, "../../");
         relativePath = file.dirname;
         return result;
+      })
+    )
+    .pipe(
+      babel({
+        presets: ["@babel/env"],
       })
     )
     .pipe(concat("plugins.min.js"))
