@@ -1,1 +1,3 @@
-docker exec wp bash -c 'rsync -av --exclude='node_modules' --exclude='gulpfile.js' --exclude='package.json' /var/www/html/ /build/html;  exit'
+echo "Please wait while we're exporting the WordPress files..."
+docker cp wp:/var/www/html/ ./build/
+echo "Successfully exported the files."

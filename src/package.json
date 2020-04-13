@@ -1,0 +1,26 @@
+{
+  "name": "docker-wordpress-gulp",
+  "version": "1.0.0",
+  "description": "Docker image for Wordpress using Gulp and BrowserSync.",
+  "main": "index.php",
+  "scripts": {
+    "start": "gulp",
+    "watch": "gulp dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Suthan Bala",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "browser-sync": "^2.26.7",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2"
+  }
+}

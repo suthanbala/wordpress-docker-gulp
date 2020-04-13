@@ -1,1 +1,4 @@
-docker exec wp-db bash -c 'mysqldump -u$WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD $WORDPRESS_DB_NAME > /build/sql/db.sql; exit'
+echo "Please wait until we export your database...";
+docker exec mysql-wordpress bash -c 'mysqldump -u$DB_USER -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE > /db.sql; exit';
+docker cp mysql-wordpress:/db.sql ./build/db.sql
+echo "Database successfully copied."
