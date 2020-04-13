@@ -2,6 +2,8 @@ const { src, dest, parallel, series, watch } = require("gulp");
 const sass = require("gulp-sass");
 const browserSync = require("browser-sync");
 const path = require("path");
+const concat = require("gulp-concat");
+const cleanCSS = require('gulp-clean-css');
 const rename = require("gulp-rename");
 const appPaths = require("./gulp/paths");
 
@@ -50,6 +52,8 @@ function css() {
         return result;
       })
     )
+    .pipe(cleanCSS())
+    .pipe(concat("style.css"))
     .pipe(server.stream())
     .pipe(
       dest(
@@ -69,6 +73,7 @@ function css() {
 function watchTask() {
   watch(appPaths.jsPath, series(js, reload));
   watch(appPaths.jsPluginsPath, series(jsPlugins, reload));
+  watch(appPaths.php, reload);
   watch(appPaths.sass, css);
 }
 

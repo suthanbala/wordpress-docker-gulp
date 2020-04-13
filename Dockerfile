@@ -11,7 +11,10 @@ RUN npm i
 COPY gulp ./gulp
 COPY ./gulpfile.js ./gulpfile.js
 
+# Exposing port 3000 for the page to be served via BrowserSync
 EXPOSE 3000
+
+# Exposing port 3001 for the admin console for BrowserSync
 EXPOSE 3001
 
 CMD ["npm run watch"]
