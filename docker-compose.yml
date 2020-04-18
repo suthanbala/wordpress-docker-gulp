@@ -1,7 +1,6 @@
 version: "3.1"
 services:
   wordpress:
-    container_name: "wp"
     image: wordpress:${WP_VERSION}
     restart: unless-stopped
     depends_on:
@@ -20,7 +19,6 @@ services:
       - WORDPRESS_DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
   browsersync:
-    container_name: 'browsersync'
     depends_on: 
       - wordpress
     build:
@@ -40,7 +38,6 @@ services:
       - ./src/gulpfile.js:/var/www/html/gulpfile.js
     command: "npm run watch"
   mysql-wordpress:
-    container_name: "mysql-wordpress"
     image: mysql
     restart: unless-stopped
     volumes:
