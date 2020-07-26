@@ -9,6 +9,7 @@ services:
       - ./src/themes/:/var/www/html/wp-content/themes
       - ./src/plugins/:/var/www/html/wp-content/plugins
       - ./src/uploads/:/var/www/html/wp-content/uploads
+      - ./uploads.conf:/usr/local/etc/php/conf.d/uploads.ini
     ports:
       - 80:80
     env_file:
