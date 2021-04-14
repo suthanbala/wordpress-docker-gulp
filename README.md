@@ -129,5 +129,6 @@ You can then upload them to your server.
 
 ## Build
 - To fully export the project, run the `export_all.sh` bash script located in the `scripts` folder. This will export all the source code and the SQL file into the `build` directory.
+- The `build` directory is git-ignored on this repo. This gives you the flexibility to have the contents of `build` directory in a different repo (Production files only).
 - If you just need the database, you can run the `/scripts/export_db.sh` Bash script. This will create a `db.sql` in the `build` directory.
 - If you just need the source files to be exported, you can run the `/scripts/export_src.sh` Bash script. This will copy all the source code including the themes, and plugins with the proper WordPress structure in to `build/html` directory.
