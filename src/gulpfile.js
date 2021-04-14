@@ -43,7 +43,7 @@ function serve(done) {
  */
 function css() {
   let relativePath;
-  return src(appPaths.sass, { sourcemaps: true })
+  return src(appPaths.sassEntrypoint, { sourcemaps: true })
     .pipe(sass())
     .pipe(
       rename((file) => {
