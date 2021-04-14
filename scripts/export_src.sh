@@ -22,6 +22,12 @@ container_name=$(get_container_name $image_name)
 docker cp $container_name:/var/www/html/ ./build
 echo "Successfully exported the files."
 
+
+# Remove the src files from the final build
+cd $current_path
+cd ../build/html/wp-content/themes
+remove_src_directories_in_themes
+
 # If manually started the container, then let's stop it
 if [ "$container_manually_started" = true ] ; then
     docker-compose stop "$service_name" > /dev/null
