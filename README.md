@@ -17,6 +17,9 @@ You can then access your site at the domain you've set in the `.env` file. For e
   - Mobile Debugging
   - Your scrolls, clicks, refresh and form actions are mirrored between different devices and browsersers
   - ..these are just a few to list, visit [BrowserSync](https://www.browsersync.io/) for more details
+- The JS is configured such a way so that, all the JS found within the `themes/theme/src/js/*.js` gets combined and minified and exported into `main.min.js`
+- Similarly, the vendor JS files, found in the `themes/theme/src/js/plugins/*.js` gets combined and minified into `plugins.min.js`
+- The SASS file from within `themes/theme/src/sass/*.scss` gets combined and minified into `themes/theme/style.css`
 
 ## Installing / Getting started
 
