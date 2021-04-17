@@ -11,7 +11,7 @@ const { removeThemePathFromFilePath } = require("./utils");
 /**
  * The task to minify and concatenate the plugins
  */
-function jsPlugins(environment = 'dev') {
+function jsPlugins(environment = 'development') {
   const options = {
     sourcemaps: true
   };

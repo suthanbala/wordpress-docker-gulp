@@ -16,7 +16,7 @@ const { removeThemePathFromFilePath } = require("./utils");
 /**
  * The task to convert the SASS file into css
  */
-function css(environment) {
+function css(environment = 'development') {
     let relativePath;
     const options = {
       sourcemaps: true

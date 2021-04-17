@@ -11,7 +11,7 @@ const { removeThemePathFromFilePath } = require("./utils");
 /**
  * The task to convert the app js into minified and concat them together.
  */
-function js(environment = 'dev') {
+function js(environment = 'development') {
   let relativePath;
   const options = {
     sourcemaps: true
