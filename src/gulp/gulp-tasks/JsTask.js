@@ -11,9 +11,17 @@ const { removeThemePathFromFilePath } = require("./utils");
 /**
  * The task to convert the app js into minified and concat them together.
  */
-function js() {
+function js(environment = 'development') {
   let relativePath;
-  return src(appPaths.jsPath, { sourcemaps: true })
+  const options = {
+    sourcemaps: true
+  };
+
+  if (environment === 'production') {
+    options.sourcemaps = false;
+  }
+
+  return src(appPaths.jsPath, options)
     .pipe(
       rename((file) => {
         const result = removeThemePathFromFilePath(file, "../../");
@@ -35,7 +43,7 @@ function js() {
           finalPath = path.resolve(file.base, relativePath, "../../", "js");
           return finalPath;
         },
-        { sourcemaps: true }
+        options
       )
     );
 }

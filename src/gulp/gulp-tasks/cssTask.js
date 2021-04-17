@@ -16,9 +16,17 @@ const { removeThemePathFromFilePath } = require("./utils");
 /**
  * The task to convert the SASS file into css
  */
-function css() {
+function css(environment = 'development') {
     let relativePath;
-    return src(appPaths.sass, { sourcemaps: true })
+    const options = {
+      sourcemaps: true
+    };
+  
+    if (environment === 'production') {
+      options.sourcemaps = false;
+    }
+
+    return src(appPaths.sass, options)
       .pipe(sass())
       .pipe(
         rename((file) => {
@@ -35,7 +43,7 @@ function css() {
             finalPath = path.resolve(file.base, relativePath, "../../");
             return finalPath;
           },
-          { sourcemaps: true }
+          options
         )
       )
   }
