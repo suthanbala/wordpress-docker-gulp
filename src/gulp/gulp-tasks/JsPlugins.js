@@ -11,9 +11,17 @@ const { removeThemePathFromFilePath } = require("./utils");
 /**
  * The task to minify and concatenate the plugins
  */
-function jsPlugins() {
+function jsPlugins(environment = 'dev') {
+  const options = {
+    sourcemaps: true
+  };
+
+  if (environment === 'production') {
+    options.sourcemaps = false;
+  }
+
   let relativePath;
-  return src(appPaths.jsPluginsPath, { sourcemaps: true })
+  return src(appPaths.jsPluginsPath, options)
     .pipe(
       rename((file) => {
         const result = removeThemePathFromFilePath(file, "../../");
@@ -35,7 +43,7 @@ function jsPlugins() {
           finalPath = path.resolve(file.base, relativePath, "../../../", "js");
           return finalPath;
         },
-        { sourcemaps: true }
+        options
       )
     );
 }

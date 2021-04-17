@@ -18,6 +18,9 @@ start_container_if_not_started "$image_name" "$service_name"
 # Get the container name
 container_name=$(get_container_name $image_name)
 
+# Spin up the browsersync service, build the files with the optimized settings
+docker-compose run -e NODE_ENV=production browsersync node_modules/.bin/gulp build
+
 # Run the Docker's COPY method to copy
 docker cp $container_name:/var/www/html/ ./build
 echo "Successfully exported the files."
