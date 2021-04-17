@@ -36,8 +36,8 @@ remove_src_directories_in_themes() {
     for d in */ ; do
         if [ -d "$d/src" ];
         then
+            echo "Removing the src files from the theme: $d"
             rm -r "$d/src"
         fi
-        echo "$d"
     done
 }
