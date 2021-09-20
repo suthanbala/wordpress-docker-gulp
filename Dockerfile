@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:14
 WORKDIR /var/www/html
 
 # Copying our package.json containing all the necessary dependencies
