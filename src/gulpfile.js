@@ -1,5 +1,5 @@
 const { src, dest, parallel, series, watch } = require("gulp");
-const sass = require("gulp-sass");
+const sass = require("gulp-sass")(require('sass'));
 const browserSync = require("browser-sync");
 const path = require("path");
 const gulpif = require('gulp-if');
