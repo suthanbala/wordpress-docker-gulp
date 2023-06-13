@@ -6,9 +6,7 @@ services:
     depends_on:
       - mysql-wordpress
     volumes:
-      - ./src/themes/:/var/www/html/wp-content/themes
-      - ./src/plugins/:/var/www/html/wp-content/plugins
-      - ./src/uploads/:/var/www/html/wp-content/uploads
+      - ./src:/var/www/html
       - ./uploads.conf:/usr/local/etc/php/conf.d/uploads.ini
     ports:
       - 80:80
