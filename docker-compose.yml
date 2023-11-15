@@ -6,7 +6,7 @@ services:
     depends_on:
       - mysql-wordpress
     volumes:
-      - ./src:/var/www/html/wp-content
+      - ./wordpress:/var/www/html/
       - ./uploads.conf:/usr/local/etc/php/conf.d/uploads.ini
     ports:
       - 80:80
@@ -18,7 +18,7 @@ services:
       - WORDPRESS_DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - WORDPRESS_DB_NAME=${MYSQL_DATABASE}
   browsersync:
-    depends_on: 
+    depends_on:
       - wordpress
     build:
       context: ./src
@@ -32,7 +32,7 @@ services:
       - 3000:3000
       - 3001:3001
     volumes:
-      - ./src/themes/:/var/www/html/themes
+      - ./wordpress/wp-content/themes/:/var/www/html/themes
       - ./src/gulp/:/var/www/html/gulp
       - ./src/gulpfile.js:/var/www/html/gulpfile.js
     command: "npm run watch"
