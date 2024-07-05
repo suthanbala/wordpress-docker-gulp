@@ -36,10 +36,8 @@ You should now have the following structure:
 ```
 dev.yourdomain.com
 │   readme-assets
+└───wordpress
 └───src
-│   └───themes
-│   └───plugins
-│   └───uploads
 │   └───initial-db
 │   └───...
 └───scripts
@@ -50,7 +48,11 @@ dev.yourdomain.com
 │   ...
 ```
 
-The work directory will be **src**.
+The working directory will be **wordpress**.
+
+Once cloned, you must setup the folder permissions correctly. Otherwise, you'll face issues when saving files, or installing plugins.
+First, you'll need to change the owner of the `wordpress` directory to `www-data:www-data`. This will set the owner and the group to `www-data`.
+Then you'll need to grant permission the group to write. You do this by running `chmod g+w -Rf wordpress`. You may have to run it with `sudo`.
 
 ## Development
 
