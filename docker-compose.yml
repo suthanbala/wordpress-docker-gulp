@@ -8,6 +8,7 @@ services:
     volumes:
       - ./wordpress:/var/www/html/
       - ./uploads.conf:/usr/local/etc/php/conf.d/uploads.ini
+      - ./logs:/var/log/apache2
     ports:
       - 80:80
     env_file:
